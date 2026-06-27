@@ -1,0 +1,12 @@
+{
+  "name": "lighthouse-skill",
+  "description": "Agent Skill for running Google Lighthouse — audits, performance budgets, CI, and the programmatic API — to measure and verify web quality.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Nima Jafari",
+    "url": "https://github.com/nimajafari"
+  },
+  "homepage": "https://github.com/nimajafari/lighthouse-skill",
+  "repository": "https://github.com/nimajafari/lighthouse-skill",
+  "license": "MIT"
+}

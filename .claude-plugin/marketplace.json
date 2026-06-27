@@ -1,0 +1,16 @@
+{
+  "name": "nimajafari-lighthouse-skill",
+  "owner": {
+    "name": "Nima Jafari"
+  },
+  "metadata": {
+    "description": "Run Google Lighthouse from your coding agent — audits, performance budgets, CI, and the programmatic API."
+  },
+  "plugins": [
+    {
+      "name": "lighthouse-skill",
+      "source": "./",
+      "description": "Lighthouse measurement skill for any web stack."
+    }
+  ]
+}
