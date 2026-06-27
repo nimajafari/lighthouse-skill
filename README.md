@@ -57,8 +57,9 @@ Measure my homepage, then re-measure after the change to confirm it improved
 
 ## Requirements
 
-- Node.js 22 (LTS) or later (`npx lighthouse`)
-- A Chrome/Chromium install (Lighthouse drives it headless)
+- Node.js 22 (LTS) or later
+- Lighthouse installed (`npm install -g lighthouse`, or run one-off via `npx lighthouse`)
+- A Chrome/Chromium install (Lighthouse drives it; override with `CHROME_PATH`)
 - `jq` for the wrapper script's JSON output
 
 ## Related

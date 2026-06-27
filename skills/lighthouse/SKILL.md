@@ -31,17 +31,21 @@ Reach for this skill to: get a baseline score, find the specific failing audits,
 
 ## Install & run (CLI)
 
-No install needed with `npx`; for repeated runs, install globally.
+The Lighthouse readme installs it **globally** (needs Node 22 LTS+), and it drives a
+local **Chrome/Chromium** you must have installed:
 
 ```bash
-# One-off (downloads on demand)
-npx lighthouse https://example.com --output=html --output-path=./report.html --view
-
-# Installed
 npm install -g lighthouse
-lighthouse https://example.com --quiet --chrome-flags="--headless=new" \
-  --output=json --output-path=./lh.json
+# or: yarn global add lighthouse
+
+lighthouse https://example.com --view    # basic run; --view opens the HTML report
 ```
+
+Lighthouse auto-detects an installed Chrome; point it at a specific binary with the
+`CHROME_PATH` environment variable.
+
+For a quick one-off without a global install, `npx lighthouse <url>` also works — the
+published CLI bin supports it, though the official docs only cover the global install.
 
 **Machine-readable run for an agent** (JSON to a file, quiet, headless):
 
