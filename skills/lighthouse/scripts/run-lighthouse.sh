@@ -23,7 +23,7 @@ fail() {
 }
 
 command -v jq >/dev/null 2>&1 || fail "missing_dependency" "jq is required" "Install: brew install jq"
-command -v npx >/dev/null 2>&1 || fail "missing_dependency" "Node/npx is required" "Install Node.js 18+"
+command -v npx >/dev/null 2>&1 || fail "missing_dependency" "Node/npx is required" "Install Node.js 22 (LTS) or later"
 
 [ $# -ge 1 ] || fail "invalid_input" "No URL provided" "Usage: $0 <url> [runs] [categories]"
 URL="$1"
