@@ -194,9 +194,9 @@ Pair this skill with [addyosmani/web-quality-skills](https://github.com/addyosma
 
 ## References
 
-- [Lighthouse repo](https://github.com/GoogleChrome/lighthouse)
-- [Lighthouse CLI options](https://github.com/GoogleChrome/lighthouse/blob/main/docs/user-flows.md)
-- [Performance budgets / LightWallet](https://github.com/GoogleChrome/lighthouse/blob/main/docs/performance-budgets.md)
-- [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
+- [Lighthouse repo & Node CLI](https://github.com/GoogleChrome/lighthouse/blob/main/readme.md)
+- [Understanding the results](https://github.com/GoogleChrome/lighthouse/blob/main/docs/understanding-results.md)
+- [User flows](https://github.com/GoogleChrome/lighthouse/blob/main/docs/user-flows.md)
+- [Lighthouse CI (budgets via assertions)](https://github.com/GoogleChrome/lighthouse-ci)
 - [Scoring](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring)
 - [CI setup](references/CI.md) · [Programmatic API](references/PROGRAMMATIC-API.md)
