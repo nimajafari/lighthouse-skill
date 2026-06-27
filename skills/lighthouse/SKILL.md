@@ -99,6 +99,8 @@ Example output:
 | `--quiet` | Suppress progress logging |
 | `--view` | Open the HTML report when done |
 
+For every flag (throttling, emulation, `-G`/`-A` gather/audit mode, plugins, etc.), see the complete [references/CLI-FLAGS.md](references/CLI-FLAGS.md) — or run `lighthouse --help`.
+
 ## Reading the JSON
 
 Scores are `0–1` floats under `categories`; audit details are under `audits`.
@@ -199,4 +201,4 @@ Pair this skill with [addyosmani/web-quality-skills](https://github.com/addyosma
 - [User flows](https://github.com/GoogleChrome/lighthouse/blob/main/docs/user-flows.md)
 - [Lighthouse CI (budgets via assertions)](https://github.com/GoogleChrome/lighthouse-ci)
 - [Scoring](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring)
-- [CI setup](references/CI.md) · [Programmatic API](references/PROGRAMMATIC-API.md)
+- [Full CLI flag reference](references/CLI-FLAGS.md) · [CI setup](references/CI.md) · [Programmatic API](references/PROGRAMMATIC-API.md)

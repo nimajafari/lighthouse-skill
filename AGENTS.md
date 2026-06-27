@@ -19,6 +19,7 @@ lighthouse-skill/
         ├── scripts/
         │   └── run-lighthouse.sh
         └── references/
+            ├── CLI-FLAGS.md
             ├── CI.md
             └── PROGRAMMATIC-API.md
 ```
