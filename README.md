@@ -39,6 +39,20 @@ cp -r skills/* ~/.claude/skills/
 npx add-skill nimajafari/lighthouse-skill
 ```
 
+**Cursor:** the repo ships a `.cursor-plugin/plugin.json`, so Cursor discovers the skill when the repo is added as a plugin.
+
+**Gemini CLI:**
+
+```bash
+gemini extensions install https://github.com/nimajafari/lighthouse-skill
+```
+
+**Codex CLI** (v0.122+):
+
+```bash
+codex plugin marketplace add nimajafari/lighthouse-skill
+```
+
 ## Usage
 
 The skill activates when your request matches its description. Examples:
