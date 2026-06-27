@@ -14,7 +14,7 @@ measure (this skill)  →  fix  →  re-measure
 
 - **CLI** — run audits headless, limit categories, desktop vs mobile, JSON output
 - **A wrapper script** — `run-lighthouse.sh` runs N times, takes the median, and emits compact JSON (scores + failing audits) instead of a multi-MB report
-- **Performance budgets** — LightWallet `budget.json` to fail on regressions
+- **Performance budgets** — enforce metric/size thresholds via Lighthouse CI assertions (the CLI's LightWallet `--budget-path` has been removed)
 - **CI** — `@lhci/cli`, assertions, and a GitHub Actions workflow ([references/CI.md](skills/lighthouse/references/CI.md))
 - **Programmatic API** — driving Lighthouse with `chrome-launcher`, including user flows for INP ([references/PROGRAMMATIC-API.md](skills/lighthouse/references/PROGRAMMATIC-API.md))
 

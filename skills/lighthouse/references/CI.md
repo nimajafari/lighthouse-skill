@@ -53,14 +53,20 @@ npx lhci autorun
 
 ## Budgets in CI
 
-Reuse the same `budget.json` (LightWallet format) from the skill:
+Lighthouse removed the old LightWallet `budget.json` / `--budget-path` mechanism, so
+**budgets in CI are expressed as assertions** (above) rather than a separate budget
+file. Use `maxNumericValue` on the metric audits to cap timings/sizes:
 
 ```js
-collect: {
-  url: ['http://localhost:3000/'],
-  settings: { budgetPath: './budget.json' },
+assertions: {
+  'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+  'total-blocking-time':      ['error', { maxNumericValue: 300 }],
+  'resource-summary:script:size': ['warn', { maxNumericValue: 300000 }],
+  'resource-summary:total:size':  ['warn', { maxNumericValue: 1500000 }],
 }
 ```
+
+(`resource-summary:*` byte budgets are in **bytes**; timings in **ms**.)
 
 ## GitHub Actions
 

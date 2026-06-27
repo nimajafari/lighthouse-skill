@@ -90,10 +90,12 @@ Example output:
 | `--output=json\|html\|csv` | Report format (repeat for multiple) |
 | `--output-path=<path>` | Where to write the report |
 | `--only-categories=…` | Limit to `performance,accessibility,seo,best-practices` |
-| `--preset=desktop` | Desktop config (default is **mobile**: emulated mid-tier phone + slow 4G) |
-| `--chrome-flags="--headless=new"` | Run headless (CI/servers) |
-| `--budget-path=budget.json` | Enforce a performance budget (LightWallet) |
-| `--throttling-method=simulate\|devtools\|provided` | How to throttle (`simulate` is default lab throttling) |
+| `--preset=perf\|experimental\|desktop` | Built-in config; `desktop` switches to desktop form-factor + throttling (default is **mobile**: emulated mid-tier phone + slow 4G) |
+| `--chrome-flags="--headless=new"` | Run headless (CI/servers); add `--no-sandbox` in containers |
+| `--throttling-method=simulate\|devtools\|provided` | How to throttle (`simulate` is default lab throttling; `provided` = no throttling) |
+| `--extra-headers '{"Cookie":"…"}'` | Send headers/cookies (auth, feature flags) |
+| `--blocked-url-patterns="…"` | Block requests (e.g. measure a page minus third parties) |
+| `--save-assets` | Also write the trace + screenshots to disk (debugging) |
 | `--quiet` | Suppress progress logging |
 | `--view` | Open the HTML report when done |
 
@@ -117,37 +119,34 @@ jq '[.audits[] | select(.score != null and .score < 0.9)
      | {id, score, displayValue}]' lh.json
 ```
 
-## Performance budgets (LightWallet)
+## Performance budgets
 
-Fail the run when assets or timings exceed a threshold. A ready-to-edit
-[`examples/budget.json`](examples/budget.json) ships with this skill; the shape is:
+> **Heads up:** the old LightWallet `--budget-path` CLI flag and the
+> `performance-budget` / `timing-budget` audits have been **removed** from
+> Lighthouse. There is no longer a built-in budget flag on the `lighthouse` CLI.
 
-```json
-[
-  {
-    "path": "/*",
-    "timings": [
-      { "metric": "largest-contentful-paint", "budget": 2500 },
-      { "metric": "interactive", "budget": 3800 }
-    ],
-    "resourceSizes": [
-      { "resourceType": "script", "budget": 300 },
-      { "resourceType": "stylesheet", "budget": 100 },
-      { "resourceType": "image", "budget": 500 },
-      { "resourceType": "total", "budget": 1500 }
-    ],
-    "resourceCounts": [
-      { "resourceType": "third-party", "budget": 10 }
-    ]
-  }
-]
-```
+Enforce budgets in one of two ways instead:
 
-```bash
-lighthouse https://example.com --budget-path=budget.json --output=json --output-path=./lh.json
-```
+1. **Lighthouse CI assertions (recommended)** — gate a build on metric thresholds
+   and category scores with `@lhci/cli`. This is the supported, modern path; see
+   [references/CI.md](references/CI.md) for `lighthouserc.js` assertions like:
 
-Sizes are in **KB**, timings in **ms**. Budget results land under the `performance-budget` and `timing-budget` audits in the JSON.
+   ```js
+   assertions: {
+     'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+     'cumulative-layout-shift':  ['error', { maxNumericValue: 0.1 }],
+     'total-blocking-time':      ['warn',  { maxNumericValue: 300 }],
+     'categories:performance':   ['error', { minScore: 0.9 }],
+   }
+   ```
+
+2. **Assert on the JSON yourself** — for a quick local/CI gate without LHCI, read
+   the numeric values out of the report and fail your script:
+
+   ```bash
+   lcp=$(jq '.audits["largest-contentful-paint"].numericValue' lh.json)
+   awk "BEGIN{exit !($lcp <= 2500)}" || { echo "LCP over budget: ${lcp}ms"; exit 1; }
+   ```
 
 ## Lab vs. field — read this before trusting a number
 
