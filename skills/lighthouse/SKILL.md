@@ -1,15 +1,15 @@
 ---
 name: lighthouse
-description: Run Google Lighthouse to measure and verify web quality — performance, accessibility, SEO, and best practices. Use when asked to "run Lighthouse", "measure performance", "check my Lighthouse score", "audit a URL", "set up performance budgets", or "add Lighthouse to CI".
+description: Run Google Lighthouse to measure and verify web quality — performance, accessibility, SEO, best practices, and agentic browsing (AI-agent readiness, WebMCP, llms.txt). Use when asked to "run Lighthouse", "measure performance", "check my Lighthouse score", "audit a URL", "set up performance budgets", "add Lighthouse to CI", or "check if my site works for AI agents".
 license: MIT
 metadata:
   author: nimajafari
-  version: "0.1"
+  version: "0.2"
 ---
 
 # Lighthouse
 
-Run [Google Lighthouse](https://github.com/GoogleChrome/lighthouse) to **measure** web quality and **verify** that fixes actually moved the numbers. Lighthouse audits a URL across Performance, Accessibility, SEO, and Best Practices and returns a 0–100 score per category plus a list of failing audits with specific guidance.
+Run [Google Lighthouse](https://github.com/GoogleChrome/lighthouse) to **measure** web quality and **verify** that fixes actually moved the numbers. Lighthouse audits a URL across Performance, Accessibility, SEO, Best Practices, and (since v13.6) Agentic Browsing and returns a 0–100 score per category plus a list of failing audits with specific guidance.
 
 ## When to use this skill
 
@@ -31,7 +31,7 @@ Reach for this skill to: get a baseline score, find the specific failing audits,
 
 ## Install & run (CLI)
 
-The Lighthouse readme installs it **globally** (needs Node 22 LTS+), and it drives a
+The Lighthouse readme installs it **globally** (v13 needs Node 22.19+), and it drives a
 local **Chrome/Chromium** you must have installed:
 
 ```bash
@@ -75,7 +75,7 @@ Example output:
   "url": "https://example.com",
   "runs": 3,
   "lighthouseVersion": "13.x",
-  "scores": { "performance": 78, "accessibility": 95, "seo": 92, "best-practices": 96 },
+  "scores": { "performance": 78, "accessibility": 95, "seo": 92, "best-practices": 96, "agentic-browsing": 100 },
   "failingAudits": [
     { "id": "largest-contentful-paint", "score": 0.4, "displayValue": "4.2 s" },
     { "id": "unused-javascript", "score": 0.3, "displayValue": "Potential savings of 180 KiB" }
@@ -89,7 +89,8 @@ Example output:
 |------|---------|
 | `--output=json\|html\|csv` | Report format (repeat for multiple) |
 | `--output-path=<path>` | Where to write the report |
-| `--only-categories=…` | Limit to `performance,accessibility,seo,best-practices` |
+| `--only-categories=…` | Limit to any of `performance,accessibility,seo,best-practices,agentic-browsing` |
+| `--url-file=<path>` | Audit every URL in a newline-delimited file in one run (add `--fail-fast` to stop on the first failure) |
 | `--preset=perf\|experimental\|desktop` | Built-in config; `desktop` switches to desktop form-factor + throttling (default is **mobile**: emulated mid-tier phone + slow 4G) |
 | `--chrome-flags="--headless=new"` | Run headless (CI/servers); add `--no-sandbox` in containers |
 | `--throttling-method=simulate\|devtools\|provided` | How to throttle (`simulate` is default lab throttling; `provided` = no throttling) |
@@ -162,6 +163,34 @@ Lighthouse is a **lab** tool: one synthetic load, on emulated hardware, with sim
 
 Since v13 (Oct 2025+), Lighthouse [migrated Performance to **Insight Audits**](https://developer.chrome.com/blog/moving-lighthouse-to-insights). Several legacy per-opportunity audit IDs were merged or removed (e.g. CLS-related audits → `cls-culprits-insight`, image audits → `image-delivery-insight`). The *advice* is unchanged; only audit IDs and report grouping moved. When parsing older reports, treat them as a superset, not a contradiction. Pin a Lighthouse version in CI so audit IDs you assert on stay stable.
 
+> **Lighthouse CI lags the CLI.** `@lhci/cli` 0.15.x bundles **Lighthouse 12.x**, so
+> `lhci autorun` reports v12 audit IDs — no `*-insight` audits and no
+> `agentic-browsing` category — even when `npx lighthouse` gives you v13. Write LHCI
+> assertions against the version LHCI actually runs (check `lighthouseVersion` in
+> its reports). See [references/CI.md](references/CI.md).
+
+## Agentic Browsing category (v13.6+)
+
+Lighthouse 13.6 added an **`agentic-browsing`** category: checks that AI agents can
+read and operate the page. Upstream flags it as *still under development and subject
+to change*, so treat its audit IDs as unstable and don't hard-gate CI on it yet.
+
+| Audit ID | Checks |
+|----------|--------|
+| `agent-accessibility-tree` | The accessibility tree is well-formed (agents read the page through it) |
+| `llms-txt` | `/llms.txt` follows the recommended format |
+| `ard-schema` | The Agentic Resource Discovery (ARD) manifest is valid |
+| `webmcp-registered-tools` | Lists the [WebMCP](https://developer.chrome.com/docs/ai/webmcp) tools the page registers |
+| `webmcp-form-coverage` | Forms that could be exposed to agents via WebMCP annotations |
+| `webmcp-schema-validity` | Registered WebMCP tool schemas are valid |
+| `cumulative-layout-shift` | Layout stability (shared with Performance — shifting UI breaks agent clicks) |
+
+Most of these are **not applicable** (`score: null`) on a page with no `llms.txt`,
+ARD manifest, or WebMCP tools. They are excluded from the score, not failed. The HTML
+report shows this category as a fraction of passed audits; in JSON its `score` is
+still a 0–1 float. Fix failures in `agent-accessibility-tree` with an accessibility
+skill; for the rest, see [the agentic web guide](https://goo.gle/lighthouse-agentic-web).
+
 ## How the Performance score is built
 
 The Performance score is a weighted blend of lab metrics (weights shift between versions). As of recent versions, the heavy hitters are roughly:
@@ -191,6 +220,7 @@ Kept in references to stay focused:
 | Accessibility | an accessibility / WCAG skill |
 | SEO | an SEO skill |
 | Best Practices | a security / best-practices skill |
+| Agentic Browsing | an accessibility skill (for the a11y tree) + the [agentic web guide](https://goo.gle/lighthouse-agentic-web) |
 
 Pair this skill with [addyosmani/web-quality-skills](https://github.com/addyosmani/web-quality-skills) for the fix side of the loop.
 

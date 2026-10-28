@@ -5,8 +5,13 @@ snapshot; flags shift between versions, so run `lighthouse --help` (and
 `lighthouse --list-all-audits`) for the definitive list on your installed version.
 
 ```
-lighthouse <url> <options>
+lighthouse <url> [<url> ...] <options>
 ```
+
+Snapshot taken from Lighthouse **13.6.0**. Passing several URLs (or `--url-file`)
+audits them in one run, reusing one Chrome. With multiple URLs, `--output-path` must
+be an **existing directory**, a failed URL is logged and skipped unless `--fail-fast`
+is set, and `-G`/`-A` can't be used.
 
 ## Logging
 
@@ -21,6 +26,7 @@ lighthouse <url> <options>
 |------|----------------|-------------|
 | `--save-assets` | boolean (false) | Save the trace + DevTools logs (and screenshots) to disk |
 | `--list-all-audits` | boolean | Print all available audit IDs and exit |
+| `--list-locales` | boolean (false) | Print all supported locales and exit |
 | `--list-trace-categories` | boolean | Print required trace categories and exit |
 | `--additional-trace-categories` | string | Extra trace categories to capture (comma-delimited) |
 | `--config-path` | string | Path to a config JSON (custom audits/categories). Overrides `--preset` |
@@ -29,16 +35,19 @@ lighthouse <url> <options>
 | `--port` | number (0) | DevTools protocol port; `0` = random |
 | `--hostname` | string (localhost) | DevTools protocol hostname |
 | `--form-factor` | `mobile` \| `desktop` | How metrics are scored + whether mobile-only audits run. For desktop prefer `--preset=desktop` |
-| `--screenEmulation` | object | Screen emulation. `--screenEmulation.disabled`, or set `.mobile .width .height .deviceScaleFactor` individually |
-| `--emulatedUserAgent` | string | Override the emulated user-agent (`--no-emulatedUserAgent` to disable) |
+| `--screenEmulation` | object | Screen emulation. `--screenEmulation.disabled`, or set all four individually: `--screenEmulation.mobile --screenEmulation.width=360 --screenEmulation.height=640 --screenEmulation.deviceScaleFactor=2` |
+| `--emulatedUserAgent` | string | Override the emulated user-agent (`--no-emulated-user-agent` to disable) |
 | `--max-wait-for-load` | number (ms) | Timeout before the page is considered loaded. Very high values bloat traces |
 | `--enable-error-reporting` | boolean | Toggle error reporting (`--no-enable-error-reporting` to disable) |
 | `--gather-mode`, `-G` | path? | Collect artifacts from a connected browser and save to disk; quits early unless audit-mode is also set |
 | `--audit-mode`, `-A` | path? | Process saved artifacts from disk (default `./latest-run/`) — re-audit offline without re-loading the page |
 | `--only-audits` | array | Run only these audit IDs |
-| `--only-categories` | array | Run only these categories: `accessibility, best-practices, performance, seo` |
+| `--only-categories` | array | Run only these categories: `accessibility, best-practices, performance, seo, agentic-browsing` |
 | `--skip-audits` | array | Run everything except these audit IDs |
 | `--disable-full-page-screenshot` | boolean | Skip the full-page screenshot (can be large) |
+| `--ignore-status-code` | boolean | Warn instead of failing when the page returns an error HTTP status |
+| `--url-file` | string | Path to a file of newline-delimited URLs to audit |
+| `--fail-fast` | boolean | With multiple URLs, stop auditing the rest as soon as one run fails |
 
 > **`-G` / `-A` workflow:** `lighthouse <url> -G` captures artifacts once; then
 > `lighthouse -A` re-runs the *audits* against those saved artifacts. Handy for
@@ -80,6 +89,7 @@ lighthouse <url> <options>
 | `--plugins` | array | Run the specified Lighthouse plugins |
 | `--channel` | string (cli) | Reporting channel label |
 | `--chrome-ignore-default-flags` | boolean (false) | Don't apply Lighthouse's default Chrome flags |
+| `--debug-navigation` | boolean | Pause after page load until you evaluate `continueLighthouseRun` in the page console (run headful) |
 
 ## Examples (from `--help`)
 
@@ -94,7 +104,7 @@ lighthouse <url> --config-path=./myconfig.js
 lighthouse <url> --output=json --output-path=./report.json --save-assets
 
 # Disable device emulation and all throttling (measure as-is)
-lighthouse <url> --screenEmulation.disabled --throttling-method=provided --no-emulatedUserAgent
+lighthouse <url> --screenEmulation.disabled --throttling-method=provided --no-emulated-user-agent
 
 # Specific Chrome window size
 lighthouse <url> --chrome-flags="--window-size=412,660"
@@ -108,6 +118,10 @@ lighthouse <url> --extra-headers=./path/to/file.json
 
 # Limit categories
 lighthouse <url> --only-categories=performance,seo
+
+# Audit a list of URLs, stopping at the first failure
+mkdir -p reports
+lighthouse --url-file=./urls.txt --fail-fast --output=json --output-path=./reports
 ```
 
 See also: [Lighthouse readme / Node CLI](https://github.com/GoogleChrome/lighthouse/blob/main/readme.md).

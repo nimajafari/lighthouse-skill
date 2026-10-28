@@ -66,6 +66,10 @@ Set up a performance budget and add Lighthouse CI to this repo
 ```
 
 ```
+Check whether https://example.com is ready for AI agents (llms.txt, WebMCP)
+```
+
+```
 Measure my homepage, then re-measure after the change to confirm it improved
 ```
 

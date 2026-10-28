@@ -4,7 +4,7 @@
 # Full Lighthouse reports are large; this keeps only what an agent needs to act.
 set -euo pipefail
 
-CATEGORIES_DEFAULT="performance,accessibility,seo,best-practices"
+CATEGORIES_DEFAULT="performance,accessibility,seo,best-practices,agentic-browsing"
 
 TMPDIR_RUN=""
 cleanup() { [ -n "$TMPDIR_RUN" ] && rm -rf "$TMPDIR_RUN"; }
@@ -23,7 +23,7 @@ fail() {
 }
 
 command -v jq >/dev/null 2>&1 || fail "missing_dependency" "jq is required" "Install: brew install jq"
-command -v npx >/dev/null 2>&1 || fail "missing_dependency" "Node/npx is required" "Install Node.js 22 (LTS) or later"
+command -v npx >/dev/null 2>&1 || fail "missing_dependency" "Node/npx is required" "Install Node.js 22.19 or later"
 
 [ $# -ge 1 ] || fail "invalid_input" "No URL provided" "Usage: $0 <url> [runs] [categories]"
 URL="$1"
@@ -62,8 +62,9 @@ done
   fail "lighthouse_failed" "No successful Lighthouse runs" "Check the URL is reachable; see Chrome/headless errors: $(tail -3 "$TMPDIR_RUN/lh.log" 2>/dev/null | tr '\n' ' ')"
 
 # Pick the median run by performance score (Lighthouse's recommended variance fix).
-IFS=$'\n' sorted=($(printf '%s\n' "${SCORE_FILE_PAIRS[@]}" | sort -t'|' -k1,1n))
-unset IFS
+sorted=()
+while IFS= read -r pair; do sorted+=("$pair"); done \
+  < <(printf '%s\n' "${SCORE_FILE_PAIRS[@]}" | sort -t'|' -k1,1n)
 median_index=$(( ${#sorted[@]} / 2 ))
 MEDIAN_FILE="${sorted[$median_index]#*|}"
 echo "Median run: $MEDIAN_FILE" >&2

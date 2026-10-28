@@ -21,7 +21,7 @@ const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new'] });
 const runnerResult = await lighthouse('https://example.com', {
   port: chrome.port,
   output: 'json',
-  onlyCategories: ['performance', 'accessibility', 'seo', 'best-practices'],
+  onlyCategories: ['performance', 'accessibility', 'seo', 'best-practices', 'agentic-browsing'],
 });
 
 // .lhr = structured result object; .report = formatted (json/html) string
@@ -95,6 +95,10 @@ await chrome.kill();
 console.table(results);
 ```
 
+> For a plain list of URLs with no per-URL scripting, the CLI now does this for you:
+> `lighthouse --url-file=urls.txt --output=json --output-path=./reports` (see
+> [CLI-FLAGS.md](CLI-FLAGS.md)). Use the API when you need custom logic per URL.
+>
 > Reuse **one** Chrome instance across sequential runs (kill it once at the end). Run URLs sequentially unless you launch a separate Chrome per worker — sharing one port across parallel runs corrupts results.
 
 ## Authenticated pages
