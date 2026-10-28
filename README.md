@@ -33,11 +33,24 @@ cp -r skills/* ~/.claude/skills/
 /plugin install lighthouse-skill@nimajafari-lighthouse-skill
 ```
 
-**Via add-skill:**
+**Any agent, via the [`skills`](https://github.com/vercel-labs/skills) CLI** (detects the agents you have installed; works with 70+ including Antigravity, GitHub Copilot, Windsurf, OpenCode, Cline, Roo Code, Kiro, and Amp):
 
 ```bash
-npx add-skill nimajafari/lighthouse-skill
+npx skills add nimajafari/lighthouse-skill
+
+# or target specific agents, globally
+npx skills add nimajafari/lighthouse-skill -a antigravity -a github-copilot -g
 ```
+
+**Antigravity:** the repo ships an `.antigravity-plugin/plugin.json`, so the Antigravity CLI can install it as a plugin:
+
+```bash
+agy plugin install https://github.com/nimajafari/lighthouse-skill
+```
+
+Or copy the skill in by hand, to `.agents/skills/` in your workspace or
+`~/.gemini/config/skills/` for every project (App and IDE). The CLI reads global skills from
+`~/.gemini/antigravity-cli/skills/` instead.
 
 **Cursor:** the repo ships a `.cursor-plugin/plugin.json`, so Cursor discovers the skill when the repo is added as a plugin.
 
@@ -52,6 +65,27 @@ gemini extensions install https://github.com/nimajafari/lighthouse-skill
 ```bash
 codex plugin marketplace add nimajafari/lighthouse-skill
 ```
+
+**Other agents (manual):** every agent below reads the same `SKILL.md` folder, so copy
+`skills/lighthouse/` into its skills directory:
+
+| Agent | Project directory | Global directory |
+|-------|-------------------|------------------|
+| GitHub Copilot | `.agents/skills/` | `~/.copilot/skills/` |
+| Windsurf | `.windsurf/skills/` | `~/.codeium/windsurf/skills/` |
+| OpenCode | `.agents/skills/` | `~/.config/opencode/skills/` |
+| Cline | `.agents/skills/` | `~/.agents/skills/` |
+| Roo Code | `.roo/skills/` | `~/.roo/skills/` |
+| Kiro | `.kiro/skills/` | `~/.kiro/skills/` (IDE only) |
+| Amp | `.agents/skills/` | `~/.config/agents/skills/` |
+
+```bash
+# e.g. project-level, for any agent that reads .agents/skills/
+mkdir -p .agents/skills && cp -r path/to/lighthouse-skill/skills/lighthouse .agents/skills/
+```
+
+Kiro's default agent discovers skills automatically. A **custom** Kiro agent only loads
+them if you list them in its `resources` (e.g. `skill://.kiro/skills/*/SKILL.md`).
 
 ## Usage
 

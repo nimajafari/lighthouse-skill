@@ -1,0 +1,20 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "lighthouse-skill",
+  "displayName": "Lighthouse Skill",
+  "description": "Agent Skill for running Google Lighthouse — audits, performance budgets, CI, and the programmatic API — to measure and verify web quality.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Nima Jafari",
+    "url": "https://github.com/nimajafari"
+  },
+  "homepage": "https://github.com/nimajafari/lighthouse-skill",
+  "repository": "https://github.com/nimajafari/lighthouse-skill",
+  "license": "MIT",
+  "keywords": ["lighthouse", "performance", "core-web-vitals", "accessibility", "seo", "web-quality"],
+  "suggestedPrompts": [
+    "Run Lighthouse on https://example.com and tell me what to fix first",
+    "Set up a performance budget and add Lighthouse CI to this repo",
+    "Check whether https://example.com is ready for AI agents"
+  ]
+}

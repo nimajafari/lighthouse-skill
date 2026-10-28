@@ -13,6 +13,10 @@ lighthouse-skill/
 ├── README.md
 ├── LICENSE
 ├── .claude-plugin/            # Claude Code plugin + marketplace manifests
+├── .antigravity-plugin/       # Antigravity plugin manifest (agy plugin install)
+├── .cursor-plugin/            # Cursor plugin manifest
+├── codex/, .agents/plugins/   # Codex plugin + marketplace (codex/skills → ../skills)
+├── gemini-extension.json      # Gemini CLI extension manifest
 └── skills/
     └── lighthouse/
         ├── SKILL.md           # main instructions (keep under 500 lines)
