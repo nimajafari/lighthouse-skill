@@ -1,5 +1,7 @@
 # Lighthouse Skill
 
+[![Latest release](https://img.shields.io/github/v/release/nimajafari/lighthouse-skill)](https://github.com/nimajafari/lighthouse-skill/releases/latest)
+
 An [Agent Skill](https://agentskills.io/) for running [Google Lighthouse](https://github.com/GoogleChrome/lighthouse) from your coding agent — to **measure** web quality and **verify** that fixes actually moved the numbers.
 
 Most quality guidance tells an agent *what good looks like*. This skill closes the loop: it teaches the agent to actually run Lighthouse, read the scores, set budgets, gate CI, and re-measure after a change.
