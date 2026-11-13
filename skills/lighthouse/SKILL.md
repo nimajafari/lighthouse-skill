@@ -163,11 +163,11 @@ Lighthouse is a **lab** tool: one synthetic load, on emulated hardware, with sim
 
 Since v13 (Oct 2025+), Lighthouse [migrated Performance to **Insight Audits**](https://developer.chrome.com/blog/moving-lighthouse-to-insights). Several legacy per-opportunity audit IDs were merged or removed (e.g. CLS-related audits → `cls-culprits-insight`, image audits → `image-delivery-insight`). The *advice* is unchanged; only audit IDs and report grouping moved. When parsing older reports, treat them as a superset, not a contradiction. Pin a Lighthouse version in CI so audit IDs you assert on stay stable.
 
-> **Lighthouse CI lags the CLI.** `@lhci/cli` 0.15.x bundles **Lighthouse 12.x**, so
-> `lhci autorun` reports v12 audit IDs — no `*-insight` audits and no
-> `agentic-browsing` category — even when `npx lighthouse` gives you v13. Write LHCI
-> assertions against the version LHCI actually runs (check `lighthouseVersion` in
-> its reports). See [references/CI.md](references/CI.md).
+> **Lighthouse CI bundles its own Lighthouse.** `@lhci/cli` 0.16.0+ runs
+> **Lighthouse 13.6**, so `lhci autorun` reports v13 `*-insight` audits. Older 0.15.x
+> releases run **Lighthouse 12.x** and report v12 audit IDs. Write LHCI assertions
+> against the version LHCI actually runs (check `lighthouseVersion` in its reports).
+> See [references/CI.md](references/CI.md).
 
 ## Agentic Browsing category (v13.6+)
 

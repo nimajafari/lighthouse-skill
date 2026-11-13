@@ -8,13 +8,15 @@ Gate builds on Lighthouse scores and budgets with [Lighthouse CI (`@lhci/cli`)](
 npm install --save-dev @lhci/cli
 ```
 
-> **Version gap:** `@lhci/cli` 0.15.x runs **Lighthouse 12.x** internally, not the
-> v13 you get from `npx lighthouse`. In LHCI reports there are no v13 Insight audits
-> (`*-insight`) and no `agentic-browsing` category, and some v12 audit IDs that v13
-> merged away still exist. Assert on IDs that exist in v12, such as metrics,
-> category scores, and `resource-summary`, and check `lighthouseVersion` in an LHCI
-> report before adding audit-level assertions. To gate on v13-only audits, run the
-> `lighthouse` CLI directly and assert on its JSON (see SKILL.md → Performance budgets).
+> **Bundled Lighthouse version:** `@lhci/cli` **0.16.0+** runs **Lighthouse 13.6**
+> internally (and needs Node 22.19+), the same major version as `npx lighthouse`. Its
+> reports include the v13 Insight audits (`*-insight`), its `lighthouse:recommended`
+> presets target them, and assertions that use replaced legacy audit IDs are mapped
+> to the IDs that replaced them. **0.15.x and older run Lighthouse 12.x**, with no
+> Insight audits. When you upgrade from 0.15.x, re-check every audit-level assertion.
+> Metric, category-score, and `resource-summary` assertions carry over unchanged.
+> Check `lighthouseVersion` in an LHCI report to confirm which version you're
+> asserting against.
 
 ## Configure — `lighthouserc.js`
 
@@ -94,7 +96,7 @@ jobs:
       - run: npm run build --if-present
       - name: Run Lighthouse CI
         run: |
-          npm install -g @lhci/cli
+          npm install -g @lhci/cli@0.16.x
           lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
@@ -104,7 +106,7 @@ Alternative: the maintained [`treosh/lighthouse-ci-action`](https://github.com/t
 
 ## Tips
 
-- **Pin `@lhci/cli`** (which pins its bundled Lighthouse, currently 12.x) so audit IDs and weights don't shift mid-stream and break assertions. When an LHCI release moves to Lighthouse 13, re-check every audit-level assertion.
+- **Pin `@lhci/cli`** (which pins its bundled Lighthouse: 13.6 as of 0.16.x) so audit IDs and weights don't shift mid-stream and break assertions. When an LHCI release moves to a new Lighthouse version, re-check every audit-level assertion.
 - **Test a built/production bundle**, not the dev server — dev builds are unminified and unrepresentative.
 - **Start `warn`, graduate to `error`.** Begin with warnings to learn your real variance, then tighten the ones that matter to `error`.
 - **Assert on metrics, not just category scores**, for stable regression gates — `largest-contentful-paint`'s `maxNumericValue` is far less noisy than the rolled-up `categories:performance` score.
