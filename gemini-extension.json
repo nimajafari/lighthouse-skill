@@ -1,7 +1,7 @@
 {
   "name": "lighthouse-skill",
   "description": "Run Google Lighthouse from your coding agent to measure and verify web quality — performance, accessibility, SEO, best practices, and agentic browsing.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Nima Jafari"
   }
