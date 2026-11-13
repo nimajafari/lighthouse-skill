@@ -109,7 +109,7 @@ Measure my homepage, then re-measure after the change to confirm it improved
 
 ## Requirements
 
-- Node.js 22 (LTS) or later
+- Node.js 22.19 or later (required by Lighthouse 13 and `@lhci/cli` 0.16)
 - Lighthouse installed (`npm install -g lighthouse`, or run one-off via `npx lighthouse`)
 - A Chrome/Chromium install (Lighthouse drives it; override with `CHROME_PATH`)
 - `jq` for the wrapper script's JSON output
